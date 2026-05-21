@@ -19,23 +19,23 @@
 
 ---
 
-## 3. Requisitos y Ejecución del Proyecto
+## 3. Guía de Ejecución Local del Proyecto
 
-Para ejecutar este proyecto en un entorno local, asegúrese de tener instalado **Node.js** (v18 o superior). Siga los siguientes pasos desde su terminal:
+Para desplegar este proyecto en un entorno de desarrollo local, es requisito fundamental contar con **Node.js** (versión 18 o superior) preinstalado. Proceda con los siguientes pasos secuenciales utilizando la terminal de comandos de su sistema operativo:
 
-1. Clonar o descomprimir el proyecto y acceder a la raíz del directorio:
+1. **Navegación al directorio raíz:** Acceda a la carpeta principal del proyecto extraído o clonado.
    ```bash
    cd semana8
    ```
-2. Instalar las dependencias de Node:
+2. **Descarga de dependencias:** Descargue e instale todos los módulos y librerías requeridos por la arquitectura (como React, Vite y Tailwind). Este proceso es automático y solo se realiza la primera vez.
    ```bash
    npm install
    ```
-3. Levantar el servidor de desarrollo local (Vite):
+3. **Ejecución del servidor local:** Inicialice el entorno de desarrollo. Este comando compilará el código y mantendrá un servidor activo.
    ```bash
    npm run dev
    ```
-4. Acceder en el navegador a la dirección generada (usualmente `http://localhost:5173`).
+4. **Visualización:** Una vez que la terminal indique que el servidor está listo, abra su navegador web preferido e ingrese a la dirección local proporcionada (generalmente `http://localhost:5173`).
 
 ---
 
@@ -87,15 +87,13 @@ Se desarrolló un Hook personalizado orientado a la reutilización y abstracció
 
 ## 6. Validación de Rendimiento (React DevTools Profiler)
 
-El desarrollo ha sido validado mediante el **React DevTools Profiler**, asegurando la eficiencia de las optimizaciones implementadas (`React.memo`, `useMemo`, `useCallback`).
+El desarrollo ha sido rigurosamente validado mediante la herramienta oficial **React DevTools Profiler**, certificando la eficiencia arquitectónica de las optimizaciones implementadas (`React.memo`, `useMemo`, `useCallback`). 
 
-*Adjuntar capturas de evidencia a continuación:*
+Las siguientes evidencias gráficas (flamegraphs) demuestran empíricamente la supresión exitosa de re-renderizados innecesarios durante operaciones de alto estrés para el DOM virtual, tales como la adición de elementos o la mutación global de contextos de interfaz.
 
 ![Evidencia de Rendimiento - Interacción](./assets/profiler-add.png)
-*(Captura: Reducción de renders en la adición de tareas)*
 
 ![Evidencia de Rendimiento - Tema](./assets/profiler-theme.png)
-*(Captura: Eficiencia en la propagación de contexto)*
 
 ---
 
