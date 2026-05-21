@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bento-bg: rgba(255, 255, 255, 0.1);
+  --color-bento-border: rgba(255, 255, 255, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+  
+  .dark body {
+    @apply bg-slate-900 text-slate-50;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/30 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg rounded-2xl;
+  }
+}
