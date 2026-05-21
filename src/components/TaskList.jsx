@@ -36,7 +36,7 @@ export const TaskList = ({ state, dispatch, ACTIONS }) => {
         <select 
           value={filter} 
           onChange={(e) => dispatch({ type: ACTIONS.SET_FILTER, payload: e.target.value })}
-          className="p-2 rounded-lg bg-white/50 dark:bg-black/50 border border-slate-300 dark:border-slate-700 backdrop-blur-sm"
+          className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-800/70 border border-slate-300/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-md shadow-sm transition-all cursor-pointer"
         >
           <option value="all">Todas</option>
           <option value="active">Activas</option>
@@ -47,7 +47,7 @@ export const TaskList = ({ state, dispatch, ACTIONS }) => {
         <select 
           value={sort} 
           onChange={(e) => dispatch({ type: ACTIONS.SET_SORT, payload: e.target.value })}
-          className="p-2 rounded-lg bg-white/50 dark:bg-black/50 border border-slate-300 dark:border-slate-700 backdrop-blur-sm"
+          className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-800/70 border border-slate-300/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-md shadow-sm transition-all cursor-pointer"
         >
           <option value="date_desc">Más Recientes</option>
           <option value="date_asc">Más Antiguas</option>
@@ -55,9 +55,14 @@ export const TaskList = ({ state, dispatch, ACTIONS }) => {
         </select>
       </div>
 
-      <ul>
+      <ul className="space-y-3">
         {processedTasks.length === 0 ? (
-          <p className="text-center text-slate-500 py-4">No hay tareas que mostrar.</p>
+          <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500">
+            <svg className="w-16 h-16 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            <p className="text-lg">No hay tareas que mostrar.</p>
+          </div>
         ) : (
           processedTasks.map(task => (
             <TaskItem 
