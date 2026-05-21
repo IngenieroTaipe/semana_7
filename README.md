@@ -19,7 +19,27 @@
 
 ---
 
-## 3. Arquitectura y Flujo de Estado
+## 3. Requisitos y Ejecución del Proyecto
+
+Para ejecutar este proyecto en un entorno local, asegúrese de tener instalado **Node.js** (v18 o superior). Siga los siguientes pasos desde su terminal:
+
+1. Clonar o descomprimir el proyecto y acceder a la raíz del directorio:
+   ```bash
+   cd semana8
+   ```
+2. Instalar las dependencias de Node:
+   ```bash
+   npm install
+   ```
+3. Levantar el servidor de desarrollo local (Vite):
+   ```bash
+   npm run dev
+   ```
+4. Acceder en el navegador a la dirección generada (usualmente `http://localhost:5173`).
+
+---
+
+## 4. Arquitectura y Flujo de Estado
 
 El siguiente diagrama detalla el flujo de la información y la gestión de estado dentro de la arquitectura de la aplicación:
 
@@ -39,33 +59,33 @@ graph TD
     L -->|useCallback| M[Toggle/Remove Actions]
 ```
 
-## 4. Justificación Técnica de Hooks
+## 5. Justificación Técnica de Hooks
 
-### 4.1. `useReducer`
+### 5.1. `useReducer`
 Se optó por `useReducer` sobre `useState` debido a la complejidad estructural del estado de las tareas (un arreglo de objetos dependientes). Las transiciones de estado (Agregar, Eliminar, Modificar) requieren evaluar el estado anterior para retornar un nuevo estado inmutable. `useReducer` permite abstraer esta lógica de mutación en una función pura, centralizando las reglas de negocio y facilitando la mantenibilidad.
 
-### 4.2. `useContext`
+### 5.2. `useContext`
 Implementado para la gestión del estado global del Tema (Claro/Oscuro). Esto previene el problema de *Prop Drilling*, permitiendo que cualquier componente en la jerarquía pueda consumir o modificar el tema sin necesidad de pasarlo manualmente a través de múltiples niveles.
 
-### 4.3. `useEffect`
+### 5.3. `useEffect`
 Utilizado con tres propósitos fundamentales:
 1. Sincronización del estado del tema y de las tareas con `localStorage` ante cualquier mutación.
 2. Inyección dinámica de clases en el DOM (nodo raíz) para la renderización de estilos globales.
 3. Se implementó el retorno de una **función de limpieza (cleanup)** para prevenir fugas de memoria en caso de desmontaje del componente.
 
-### 4.4. `useMemo` y `useCallback`
+### 5.4. `useMemo` y `useCallback`
 - **`useMemo`:** Empleado en `TaskList` para la memoización del arreglo resultante tras aplicar filtros y algoritmos de ordenamiento. Esto mitiga el impacto en el rendimiento al prevenir recalculos costosos en re-renderizados causados por propiedades independientes.
 - **`useCallback`:** Aplicado a las funciones de interacción (`handleToggle`, `handleRemove`). Conserva la integridad referencial de la función entre ciclos de renderizado. En conjunción con `React.memo` (aplicado a `TaskItem`), asegura la prevención de re-renders innecesarios en el árbol de componentes hijos.
 
-### 4.5. `useRef`
+### 5.5. `useRef`
 Implementado para adquirir una referencia directa al nodo DOM del campo de entrada (*input*) en `TaskForm`. Esto permite forzar el enfoque (*auto-focus*) pragmáticamente sin desencadenar ciclos de re-renderizado en el componente.
 
-### 4.6. Hook Personalizado (`useLocalStorage`)
+### 5.6. Hook Personalizado (`useLocalStorage`)
 Se desarrolló un Hook personalizado orientado a la reutilización y abstracción de la API Web Storage. Este incluye manejo de excepciones estructurado (`try/catch`) garantizando resiliencia frente a políticas de seguridad estrictas en el navegador.
 
 ---
 
-## 5. Validación de Rendimiento (React DevTools Profiler)
+## 6. Validación de Rendimiento (React DevTools Profiler)
 
 El desarrollo ha sido validado mediante el **React DevTools Profiler**, asegurando la eficiencia de las optimizaciones implementadas (`React.memo`, `useMemo`, `useCallback`).
 
@@ -79,5 +99,5 @@ El desarrollo ha sido validado mediante el **React DevTools Profiler**, aseguran
 
 ---
 
-## 6. Arquitectura Visual (UI/UX)
+## 7. Arquitectura Visual (UI/UX)
 La interfaz fue desarrollada integrando la metodología de diseño *Bento Box* y la estética *Glassmorphism*. Se utilizaron utilidades avanzadas de Tailwind CSS (`backdrop-blur-2xl`, manejo preciso de opacidades) para lograr paneles translúcidos adaptativos que preservan los principios de accesibilidad tanto en modo claro como en modo oscuro.
