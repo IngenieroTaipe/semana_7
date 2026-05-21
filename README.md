@@ -12,10 +12,10 @@
 - **Yauri Torres Benjamin Raul**
 
 ## 2. Roles Técnicos Asignados
-- **Arquitecto de Estado:** __________________________________
-- **Ingeniero de Efectos & Contexto:** __________________________________
-- **Optimizador de Rendimiento:** __________________________________
-- **QA & Hook Validator:** __________________________________
+- **Arquitecto de Estado:** Barja Ortiz Erick Gerson
+- **Ingeniero de Efectos & Contexto:** Toribio Anselmo David Angel
+- **Optimizador de Rendimiento:** Yauri Torres Benjamin Raul
+- **QA & Hook Validator:** Navarro Serva Lesly Brenda
 
 ---
 
