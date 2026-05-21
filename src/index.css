@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-bento-bg: rgba(255, 255, 255, 0.1);
   --color-bento-border: rgba(255, 255, 255, 0.2);
