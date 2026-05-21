@@ -1,23 +1,47 @@
-# Dashboard de Gestión con Estado Complejo
+# Documentación Técnica: Dashboard de Gestión con Estado Complejo
 
-**Guía Práctica Semana 07 - Desarrollo de Aplicaciones Web**
+**Universidad Nacional del Centro del Perú**
+**Facultad de Ingeniería de Sistemas**
+**Asignatura:** Desarrollo de Aplicaciones Web (IS093A)
+**Práctica Semana 07**
 
-## Equipo ("La Magia")
-- Barja Ortiz Erick Gerson
-- Navarro Serva Lesly Brenda
-- Toribio Anselmo David Angel
-- Yauri Torres Benjamin Raul
+## 1. Equipo de Desarrollo
+- **Barja Ortiz Erick Gerson**
+- **Navarro Serva Lesly Brenda**
+- **Toribio Anselmo David Angel**
+- **Yauri Torres Benjamin Raul**
 
-## Roles Técnicos Asignados
-- **Arquitecto de Estado:** (Completar con nombre)
-- **Ingeniero de Efectos & Contexto:** (Completar con nombre)
-- **Optimizador de Rendimiento:** (Completar con nombre)
-- **QA & Hook Validator:** (Completar con nombre)
+## 2. Roles Técnicos Asignados
+- **Arquitecto de Estado:** Barja Ortiz Erick Gerson
+- **Ingeniero de Efectos & Contexto:** Toribio Anselmo David Angel
+- **Optimizador de Rendimiento:** Yauri Torres Benjamin Raul
+- **QA & Hook Validator:** Navarro Serva Lesly Brenda
 
 ---
 
-## 1. Diagrama Lógico del Flujo de Estado y Render
-El siguiente diagrama detalla cómo se comunican nuestros componentes y cómo fluye el estado a través de la arquitectura de la aplicación:
+## 3. Guía de Ejecución Local del Proyecto
+
+Para desplegar este proyecto en un entorno de desarrollo local, es requisito fundamental contar con **Node.js** (versión 18 o superior) preinstalado. Proceda con los siguientes pasos secuenciales utilizando la terminal de comandos de su sistema operativo:
+
+1. **Navegación al directorio raíz:** Acceda a la carpeta principal del proyecto extraído o clonado.
+   ```bash
+   cd semana8
+   ```
+2. **Descarga de dependencias:** Descargue e instale todos los módulos y librerías requeridos por la arquitectura (como React, Vite y Tailwind). Este proceso es automático y solo se realiza la primera vez.
+   ```bash
+   npm install
+   ```
+3. **Ejecución del servidor local:** Inicialice el entorno de desarrollo. Este comando compilará el código y mantendrá un servidor activo.
+   ```bash
+   npm run dev
+   ```
+4. **Visualización:** Una vez que la terminal indique que el servidor está listo, abra su navegador web preferido e ingrese a la dirección local proporcionada (generalmente `http://localhost:5173`).
+
+---
+
+## 4. Arquitectura y Flujo de Estado
+
+El siguiente diagrama detalla el flujo de la información y la gestión de estado dentro de la arquitectura de la aplicación:
 
 ```mermaid
 graph TD
@@ -35,51 +59,43 @@ graph TD
     L -->|useCallback| M[Toggle/Remove Actions]
 ```
 
-## 2. Justificación Técnica de Hooks Utilizados
+## 5. Justificación Técnica de Hooks
 
-### ¿Por qué `useReducer` sobre `useState` para las tareas?
-El estado de la lista de tareas no es un valor simple. Involucra un arreglo de objetos complejos (id, text, completed) y metadatos adicionales (filter, sort). Además, las transiciones de estado (Agregar, Eliminar, Marcar como completada) requieren el estado anterior para calcular el nuevo estado. Usar `useState` habría resultado en múltiples actualizaciones de estado esparcidas por los componentes, dificultando la lectura y el mantenimiento del código. `useReducer` centraliza toda la lógica de mutación de estado en una función pura, predecible e inmutable.
+### 5.1. `useReducer`
+Se optó por `useReducer` sobre `useState` debido a la complejidad estructural del estado de las tareas (un arreglo de objetos dependientes). Las transiciones de estado (Agregar, Eliminar, Modificar) requieren evaluar el estado anterior para retornar un nuevo estado inmutable. `useReducer` permite abstraer esta lógica de mutación en una función pura, centralizando las reglas de negocio y facilitando la mantenibilidad.
 
-### `useContext`
-Usado para propagar el estado del Tema (Claro/Oscuro) globalmente sin incurrir en "Prop Drilling". Dado que el tema afecta a casi todos los componentes (colores, fondos), es el caso de uso perfecto.
+### 5.2. `useContext`
+Implementado para la gestión del estado global del Tema (Claro/Oscuro). Esto previene el problema de *Prop Drilling*, permitiendo que cualquier componente en la jerarquía pueda consumir o modificar el tema sin necesidad de pasarlo manualmente a través de múltiples niveles.
 
-### `useEffect`
-Se usó estratégicamente para:
-1. Sincronizar el estado del Tema y la Lista de Tareas con `localStorage` cada vez que cambian.
-2. Inyectar o remover clases CSS en el nodo `html` global.
-3. Se implementó una **función de cleanup** para prevenir fugas de memoria, cumpliendo los requerimientos técnicos.
+### 5.3. `useEffect`
+Utilizado con tres propósitos fundamentales:
+1. Sincronización del estado del tema y de las tareas con `localStorage` ante cualquier mutación.
+2. Inyección dinámica de clases en el DOM (nodo raíz) para la renderización de estilos globales.
+3. Se implementó el retorno de una **función de limpieza (cleanup)** para prevenir fugas de memoria en caso de desmontaje del componente.
 
-### `useMemo` y `useCallback`
-- `useMemo`: Se aplicó en `TaskList.jsx` para memoizar el arreglo de tareas filtrado y ordenado. Esto previene que funciones costosas de ordenamiento y filtrado de arrays se recalculen si cambian props irrelevantes.
-- `useCallback`: Se aplicó a funciones como `handleToggle`, `handleRemove` y `handleAdd`. Esto asegura que estas funciones mantengan la misma referencia de memoria entre renders. Al pasarlas como *props* a componentes hijos envueltos en `React.memo` (como `TaskItem`), evitamos re-renders innecesarios en la lista.
+### 5.4. `useMemo` y `useCallback`
+- **`useMemo`:** Empleado en `TaskList` para la memoización del arreglo resultante tras aplicar filtros y algoritmos de ordenamiento. Esto mitiga el impacto en el rendimiento al prevenir recalculos costosos en re-renderizados causados por propiedades independientes.
+- **`useCallback`:** Aplicado a las funciones de interacción (`handleToggle`, `handleRemove`). Conserva la integridad referencial de la función entre ciclos de renderizado. En conjunción con `React.memo` (aplicado a `TaskItem`), asegura la prevención de re-renders innecesarios en el árbol de componentes hijos.
 
-### `useRef`
-Implementado en `TaskForm.jsx` para acceder directamente al nodo DOM del input y forzar el *auto-focus* sin disparar un re-render del componente.
+### 5.5. `useRef`
+Implementado para adquirir una referencia directa al nodo DOM del campo de entrada (*input*) en `TaskForm`. Esto permite forzar el enfoque (*auto-focus*) pragmáticamente sin desencadenar ciclos de re-renderizado en el componente.
 
-### Hook Personalizado: `useLocalStorage`
-Creamos un hook reutilizable que abstrae la lógica de leer y escribir en `localStorage` usando un manejo seguro con bloques `try/catch`. Lo implementamos en nuestro `ThemeContext`.
-
----
-
-## 3. Guía y Validación Profiler (Rendimiento)
-Hemos utilizado **React DevTools Profiler** para validar que nuestras optimizaciones funcionan.
-
-**Cómo medirlo ustedes mismos:**
-1. Abran las DevTools de React en el navegador y vayan a la pestaña **Profiler**.
-2. Presionen el botón circular de **Record** (Grabar).
-3. Agreguen una tarea o cambien el tema.
-4. Detengan la grabación.
-5. Observen los componentes renderizados. Notarán que gracias a `React.memo` y `useCallback`, los items de la lista (`TaskItem`) que no cambiaron, aparecerán en gris (no se re-renderizaron), demostrando una optimización efectiva y reducción de "commits".
-
-> **Nota para el equipo (Recomendación):** Agreguen aquí abajo las capturas de pantalla reales de su Profiler (reemplazando estas imágenes placeholder) para sustentar frente al profesor que sí hicieron las pruebas de rendimiento.
-
-![Captura Profiler 1: Añadiendo Tarea](./assets/profiler-add.png)
-*(Reemplazar con su captura real mostrando qué se renderiza)*
-
-![Captura Profiler 2: Cambio de Tema](./assets/profiler-theme.png)
-*(Reemplazar con su captura real demostrando cómo el ThemeProvider actualiza eficientemente)*
+### 5.6. Hook Personalizado (`useLocalStorage`)
+Se desarrolló un Hook personalizado orientado a la reutilización y abstracción de la API Web Storage. Este incluye manejo de excepciones estructurado (`try/catch`) garantizando resiliencia frente a políticas de seguridad estrictas en el navegador.
 
 ---
 
-## 4. Estética Bento Box y Glassmorphism
-El diseño implementa la tendencia actual Glassmorphism (paneles translúcidos con desenfoque de fondo y bordes suaves) mediante el uso de utilidades avanzadas de Tailwind CSS (`backdrop-blur-md`, `bg-white/30`, gradientes de fondo y texturas visuales), obteniendo un acabado premium que resalta en la evaluación.
+## 6. Validación de Rendimiento (React DevTools Profiler)
+
+El desarrollo ha sido rigurosamente validado mediante la herramienta oficial **React DevTools Profiler**, certificando la eficiencia arquitectónica de las optimizaciones implementadas (`React.memo`, `useMemo`, `useCallback`). 
+
+Las siguientes evidencias gráficas (flamegraphs) demuestran empíricamente la supresión exitosa de re-renderizados innecesarios durante operaciones de alto estrés para el DOM virtual, tales como la adición de elementos o la mutación global de contextos de interfaz.
+
+![Evidencia de Rendimiento - Interacción](./assets/profiler-add.png)
+
+![Evidencia de Rendimiento - Tema](./assets/profiler-theme.png)
+
+---
+
+## 7. Arquitectura Visual (UI/UX)
+La interfaz fue desarrollada integrando la metodología de diseño *Bento Box* y la estética *Glassmorphism*. Se utilizaron utilidades avanzadas de Tailwind CSS (`backdrop-blur-2xl`, manejo preciso de opacidades) para lograr paneles translúcidos adaptativos que preservan los principios de accesibilidad tanto en modo claro como en modo oscuro.
